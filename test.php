@@ -126,22 +126,41 @@ body, html {
 #sidebar-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+    height: 100%;
     width: 100%;
-    padding-top: 60px;
+    position: relative;
+}
+
+#tab-content {
     flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.logo-container img {
+    width: 80%;
+    max-width: 200px;
+    height: auto;
+}
+
+.logo-container {
+    width: 100%;
+    padding: 20px 0;
+    margin-top: auto;
+    text-align: center;
+    background-color: #333; /* Match sidebar background */
+    position: sticky;
+    bottom: 0;
 }
 
 #button-container {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    flex-grow: 1;
-    margin-top: 30%;
+    padding-top: 30%;
+    overflow-y: auto;
 }
+
 
 #sidebar button {
     background-color: #444;
@@ -631,7 +650,9 @@ color: #ff4444 !important;
         <!-- Flyttad hit inuti sidebar-content -->
 		
 		
-        <img src="map-images/resekartan-logo.png" alt="Resekartan Logo">
+    <div class="logo-container">
+            <img src="map-images/resekartan-logo.png" alt="Resekartan Logo">
+        </div>
 		
 		
     </div>
@@ -972,46 +993,45 @@ function saveAttraction(name) {
         }, 300);
     }
 
-    function selectTab(tabId) {
-        const buttonContainer = document.getElementById('button-container');
-        const tabContent = document.getElementById('tab-content');
-        const bottomMenu = document.getElementById('bottom-menu');
-        const mapElement = document.getElementById('map');
-        const sidebar = document.getElementById('sidebar');
+ function selectTab(tabId) {
+    const buttonContainer = document.getElementById('button-container');
+    const tabContent = document.getElementById('tab-content');
+    const bottomMenu = document.getElementById('bottom-menu');
+    const mapElement = document.getElementById('map');
+    const sidebar = document.getElementById('sidebar');
 
+    if (tabId === 'tab2') {
+        // Special handling for List Attractions
         buttonContainer.style.display = 'none';
-        tabContent.innerHTML = '';
         tabContent.style.display = 'none';
+        bottomMenu.style.display = 'flex';
+        mapElement.style.height = '60%';
+    } else {
+        // For all other tabs
         bottomMenu.style.display = 'none';
-
+        mapElement.style.height = '100%';
+        
+        buttonContainer.style.display = 'none';
+        tabContent.style.display = 'block';
+        
+        // Update tab content while maintaining structure
         switch (tabId) {
             case 'tab1':
                 tabContent.innerHTML = '<h2>Filter & Style</h2><p>Innehåll för Filter & Style</p>';
-                tabContent.className = 'tab1';
-                tabContent.style.display = 'block';
                 break;
             case 'tab3':
                 tabContent.innerHTML = '<h2>Saved Attractions</h2><p>Innehåll för Saved Attractions</p>';
-                tabContent.className = 'tab3';
-                tabContent.style.display = 'block';
                 break;
             case 'tab4':
                 tabContent.innerHTML = '<h2>Help</h2><p>Innehåll för Help</p>';
-                tabContent.className = 'tab4';
-                tabContent.style.display = 'block';
-                break;
-            case 'tab2':
-                sidebar.classList.remove('open');
-                mapElement.style.width = '100%';
-                mapElement.style.height = '60%';
-                bottomMenu.style.display = 'flex';
                 break;
         }
-
-        setTimeout(() => {
-            map.resize();
-        }, 300);
     }
+
+    setTimeout(() => {
+        map.resize();
+    }, 300);
+}
 	
 function navigateToLocation(coords) {
     const lat = coords[1];
