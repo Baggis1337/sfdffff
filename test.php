@@ -155,8 +155,18 @@ body, html {
 }
 
 #tab-content {
-    flex: 1;
-    overflow-y: auto;
+    width: calc(100% - 50px); /* Full bredd minus 20px för padding */
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 60px; /* Samma som sidebar-content padding-top */
+}
+
+/* Justera stylingen för innehållet inuti tab-content */
+#tab-content h2,
+#tab-content p {
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 #sidebar img {
     width: 80%;
