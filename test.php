@@ -127,40 +127,16 @@ body, html {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 100%;
-    position: relative;
-}
-
-#tab-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-}
-
-.logo-container img {
-    width: 80%;
-    max-width: 200px;
-    height: auto;
-}
-
-.logo-container {
-    width: 100%;
-    padding: 20px 0;
-    margin-top: auto;
-    text-align: center;
-    background-color: #333; /* Match sidebar background */
-    position: sticky;
-    bottom: 0;
 }
 
 #button-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding-top: 30%;
-    overflow-y: auto;
+    align-items: center;
+    padding-top: 60px;
+    min-height: 0; /* Förhindrar overflow */
 }
-
 
 #sidebar button {
     background-color: #444;
@@ -178,18 +154,20 @@ body, html {
     background-color: #555;
 }
 
+#tab-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
 #sidebar img {
     width: 80%;
     margin: 20px auto;
     display: block;
+    margin-top: auto; /* Detta flyttar logon till botten */
 }
-
 
 /* Menu Toggle Button */
 .menu-toggle {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     background-color: #333;
     color: white;
     border: none;
@@ -199,76 +177,88 @@ body, html {
     border-radius: 5px;
     font-size: 30px;
     line-height: 1;
+    margin-left: auto; /* Flyttar hamburgarikonen till höger */
 }
 
-/* Search Container Styles */
-#search-container {
-    position: relative;
-    width: 90%;
-    max-width: 200px;
-    z-index: 10; /* Öka z-index */
-    margin: 10px;
-}
-
-#search-input {
-    flex-grow: 1; /* Allow input to take up available space */
-    width: 100%;
-    padding: 15px;
-    border: 1px solid #444444;
-    border-radius: 0;
-    background: #333333;
-    color: white; /* Ändra textfärgen till vit */
-    font-size: 16px;
-    margin: 0;
+#top-bar {
+    position: absolute;
+    top: 10px;
+    width: 20%;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
     box-sizing: border-box;
-    box-shadow: none;
-    pointer-events: auto; /* Allow interaction with input */
-    padding-right: 30px; /* Make space for clear button */
 }
 
-#search-input::placeholder {
-    color: #8e8e8e; /* Ändra placeholder-texten till vit */
+#search-container {
+    width: 50%;
+    transition: opacity 0.3s;
+    opacity: 0;
+    flex: 0 0 50%;
+    margin: 0 auto 0 0;
+    transform: translateX(35%); /* Ökad till 35% för att centrera från hamburgarikonen */
 }
+#search-container.search-visible {
+    opacity: 1;
+}
+
 
 .search-wrapper {
     position: relative;
     width: 100%;
-    margin: 0 auto;
-    pointer-events: auto; /* Tillåter interaktion med wrapper */
+}
+
+#search-input {
+    width: 100%;
+    padding: 5px 5px 5px 5px;
+    border: 1px solid #444444; /* Ändra ramfärgen till #444444 */
+    border-radius: 4px;
+    background: #333; /* Samma färg som bakgrund */
+    color: white; /* Samma färg som texten i sidebaren */
+    font-size: 14px;
+    autocomplete: off; /* Avaktivera autofill */
 }
 
 #search-input:focus {
     outline: none;
-    background: #333333;
-    border-color: #444444;
+    background: #333; /* Samma färg som bakgrund */
+    color: white; /* Samma färg som texten i sidebaren */
+}
+
+#search-input::-webkit-input-placeholder {
+    color: white; /* Samma färg som texten i sidebaren */
+}
+
+#search-input:-ms-input-placeholder {
+    color: white; /* Samma färg som texten i sidebaren */
+}
+
+#search-input::placeholder {
+    color: white; /* Samma färg som texten i sidebaren */
 }
 
 .search-clear-btn {
-    position: absolute; /* Ändra till absolut positionering */
-    right: 0px; /* Justera positionen */
+    position: absolute;
+    right: 10px;
     top: 50%;
-    color: #fff !important;
-    cursor: pointer;
-    font-size: 24px !important;
-    background-color: transparent !important;
+    transform: translateY(-50%);
+    background: none;
     border: none;
-	border-radius: 0 12px 0 0 !important;
-    padding: 0 !important;
-    line-height: 1;
-    display: none; /* Hidden by default */
-    pointer-events: auto;
-    user-select: none;
-	justify-content: center !important;
-	align-items: center !important;
-	    transform: translateY(-50%) !important; /* Vertikal centrering */
-    height: 40px !important;
-    width: 40px !important;
-
+    color: #adbac7;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-
 .search-clear-btn:hover {
-color: #ff4444 !important;
+    color: #ffffff;
 }
 
 .search-results {
@@ -304,18 +294,39 @@ color: #ff4444 !important;
     color: #ffffff;
 }
 
-/* Bottom Menu */
-#bottom-menu {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 40%;
-    background-color: #333;
-    color: white;
-    display: none;
-    flex-direction: column;
+.search-result-icon {
+    font-size: 18px;
+    margin-right: 12px;
+    display: flex;
     align-items: center;
-    justify-content: center;
+}
+
+.search-result-content {
+    flex-grow: 1;
+}
+
+.search-result-title {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.search-result-subtitle {
+    font-size: 12px;
+    color: #768390;
+}
+
+/* Custom Scrollbar for Search Results */
+.search-results::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-results::-webkit-scrollbar-track {
+    background: #2d333b;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+    background: #444c56;
+    border-radius: 3px;
 }
 
 /* Popup Styles */
@@ -561,30 +572,38 @@ color: #ff4444 !important;
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* Sidebar responsiveness */
     #sidebar {
         width: 50%;
     }
-    
     #map {
         width: 100%;
     }
-    
     #sidebar.open #map {
         width: 50%;
     }
-    
+	
+	    #top-bar {
+        width: 50%; /* Samma som sidebar på mobil */
+    }
+
+    /* Icon container responsiveness */
     .icon-container {
         gap: 15px;
         max-width: 160px;
         padding: 0 10px;
     }
-    
+
     .icon-container a {
         width: 28px;
         height: 28px;
     }
+
+ #search-container {
+        max-width: calc(0.3 * 50vw); /* 30% av sidopanelens bredd på mobil (50% av viewport) */
+		}
 }
-    </style>
+</style>
 </head>
 <body>
    <div id="map"></div>
@@ -597,7 +616,7 @@ color: #ff4444 !important;
             <div id="search-container">
                 <div class="search-wrapper">
                     <input type="text" id="search-input" placeholder="Search..." autocomplete="off">
-<span id="search-clear" class="search-clear-btn">×</span>
+                    <span id="search-clear" class="search-clear-btn">×</span>
                 </div>
                 <div id="search-results" class="search-results"></div>
             </div>
@@ -642,17 +661,13 @@ color: #ff4444 !important;
             <path d="M20,4H4C2.895,4,2,4.895,2,6v12c0,1.105,0.895,2,2,2h16c1.105,0,2-0.895,2-2V6C22,4.895,21.105,4,20,4z M20,8.236l-8,4.882 L4,8.236V6h16V8.236z" fill="currentColor"></path>
           </svg>
         </a>
-      </div> 
-    </div>
-
-
+      </div>
+        </div>
         <div id="tab-content"></div>
         <!-- Flyttad hit inuti sidebar-content -->
 		
 		
-    <div class="logo-container">
-            <img src="map-images/resekartan-logo.png" alt="Resekartan Logo">
-        </div>
+        <img src="map-images/resekartan-logo.png" alt="Resekartan Logo">
 		
 		
     </div>
@@ -666,6 +681,8 @@ color: #ff4444 !important;
     <script src='https://unpkg.com/@turf/turf@7.2.0/turf.min.js'></script> <!-- Uppdaterad 2025-02-12 -->
 
 <script>
+	mapboxgl.config.EVENTS_URL = null; // Stoppar från att skicka data
+
     mapboxgl.accessToken = 'pk.eyJ1IjoicmVzZWthcnRhbiIsImEiOiJjanVoYW5jdWkwNGF1M3ptb3hoYnJkbTkzIn0.Yt_FQx_n7KKwitn6cH487w';
 
     const map = new mapboxgl.Map({
@@ -684,6 +701,7 @@ color: #ff4444 !important;
 const navControl = new mapboxgl.NavigationControl({
     showCompass: true,
     showZoom: false,
+    // Lägg till passive touch handlers
     eventHandlerOptions: {
         passive: true
     }
@@ -759,6 +777,8 @@ const navControl = new mapboxgl.NavigationControl({
         // Initialize clickable points and lines
         addClickablePointsAndLines();
     });
+	
+
 
     function addClickablePointsAndLines() {
         let currentPopup = null;
@@ -993,39 +1013,46 @@ function saveAttraction(name) {
         }, 300);
     }
 
- function selectTab(tabId) {
+  function selectTab(tabId) {
     const buttonContainer = document.getElementById('button-container');
     const tabContent = document.getElementById('tab-content');
     const bottomMenu = document.getElementById('bottom-menu');
     const mapElement = document.getElementById('map');
     const sidebar = document.getElementById('sidebar');
+    const searchContainer = document.getElementById('search-container');
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.querySelector('.search-results');
 
-    if (tabId === 'tab2') {
-        // Special handling for List Attractions
-        buttonContainer.style.display = 'none';
-        tabContent.style.display = 'none';
-        bottomMenu.style.display = 'flex';
-        mapElement.style.height = '60%';
-    } else {
-        // For all other tabs
-        bottomMenu.style.display = 'none';
-        mapElement.style.height = '100%';
-        
-        buttonContainer.style.display = 'none';
-        tabContent.style.display = 'block';
-        
-        // Update tab content while maintaining structure
-        switch (tabId) {
-            case 'tab1':
-                tabContent.innerHTML = '<h2>Filter & Style</h2><p>Innehåll för Filter & Style</p>';
-                break;
-            case 'tab3':
-                tabContent.innerHTML = '<h2>Saved Attractions</h2><p>Innehåll för Saved Attractions</p>';
-                break;
-            case 'tab4':
-                tabContent.innerHTML = '<h2>Help</h2><p>Innehåll för Help</p>';
-                break;
-        }
+    buttonContainer.style.display = 'none';
+    tabContent.innerHTML = '';
+    tabContent.style.display = 'none';
+    bottomMenu.style.display = 'none';
+
+    switch (tabId) {
+        case 'tab1':
+            tabContent.innerHTML = '<h2>Filter & Style</h2><p>Innehåll för Filter & Style</p>';
+            tabContent.className = 'tab1';
+            tabContent.style.display = 'block';
+            break;
+        case 'tab3':
+            tabContent.innerHTML = '<h2>Saved Attractions</h2><p>Innehåll för Saved Attractions</p>';
+            tabContent.className = 'tab3';
+            tabContent.style.display = 'block';
+            break;
+        case 'tab4':
+            tabContent.innerHTML = '<h2>Help</h2><p>Innehåll för Help</p>';
+            tabContent.className = 'tab4';
+            tabContent.style.display = 'block';
+            break;
+        case 'tab2':
+            sidebar.classList.remove('open');
+            mapElement.style.width = '100%';
+            mapElement.style.height = '60%';
+            bottomMenu.style.display = 'flex';
+            searchContainer.classList.remove('search-visible');
+            searchInput.value = ''; // Töm sökrutan
+            searchResults.style.display = 'none'; // Dölj resultatlistan
+            break;
     }
 
     setTimeout(() => {
@@ -1214,12 +1241,27 @@ let currentFeatures = [];
 let attractionsData = null;
 
 fetch('generator.geojson')
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
+        if (!data || !data.features) {
+            throw new Error('Invalid GeoJSON data format');
+        }
         attractionsData = data;
         console.log('GeoJSON data loaded successfully');
     })
-    .catch(error => console.error('Error loading GeoJSON:', error));
+    .catch(error => {
+        console.error('Error loading GeoJSON:', error);
+        // Show user-friendly error message
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.textContent = 'Unable to load location data. Please refresh the page.';
+        document.body.appendChild(errorMessage);
+    });
 
 
 // Modify your existing toggleMenu function to show/hide search
@@ -1284,22 +1326,36 @@ searchClear.addEventListener('click', () => {
 
 // Create a marker for search results
 const searchMarker = new mapboxgl.Marker({
-    color: '#00b4ff',
-    scale: 0.8
+    color: '#316dca', // Modern blue color
+    scale: 0.9, // Slightly smaller than default
+    // Custom marker element
+    element: (() => {
+        const el = document.createElement('div');
+        el.innerHTML = `
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 2C11.373 2 6 7.373 6 14c0 7.019 10.5 18.997 10.959 19.499.228.249.577.249.805 0C18.223 32.997 30 21.019 30 14c0-6.627-5.373-12-12-12zm0 7.5c-2.486 0-4.5 2.014-4.5 4.5s2.014 4.5 4.5 4.5 4.5-2.014 4.5-4.5-2.014-4.5-4.5-4.5z" 
+                    fill="#316dca"
+                    stroke="white"
+                    stroke-width="1.5"/>
+            </svg>`;
+        el.style.transform = 'translate(-50%, -100%)';
+        el.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))';
+        return el;
+    })()
 });
 
 // Search in local GeoJSON and Mapbox Geocoding API
 async function performSearch(query) {
     try {
-        // Sök i lokal GeoJSON
+        // Search in local GeoJSON
         const customFeatures = searchLocalFeatures(query);
 
-        // Sök i Mapbox Geocoding API
-        const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${mapboxgl.accessToken}&limit=10`;
+        // Search in Mapbox Geocoding API
+        const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=pk.eyJ1IjoicmVzZWthcnRhbiIsImEiOiJjanVoYW5jdWkwNGF1M3ptb3hoYnJkbTkzIn0.Yt_FQx_n7KKwitn6cH487w&limit=10`;
         const response = await fetch(geocodingUrl);
         const data = await response.json();
 
-        // Kombinera och visa resultat, prioritera egna platser
+        // Combine and display results, prioritize custom places
         displaySearchResults([...customFeatures, ...data.features]);
     } catch (error) {
         console.error('Search error:', error);
@@ -1334,19 +1390,27 @@ function searchLocalFeatures(query) {
 function displaySearchResults(features) {
     searchResults.innerHTML = '';
     currentFeatures = features;
+    let currentPopup = null; // Track current popup
 
     if (features.length === 0) {
         searchResults.style.display = 'none';
         return;
     }
 
+    // Add click handler to map to close popup when clicking outside
+    map.on('click', () => {
+        if (currentPopup) {
+            currentPopup.remove();
+            currentPopup = null;
+        }
+    });
+
     features.forEach((feature) => {
         const resultItem = document.createElement('div');
         resultItem.className = 'search-result-item';
         
         const isCustomFeature = feature.properties && feature.properties.Name;
-        // Använd rätt koordinatformat beroende på feature-typ
-        const coordinates = isCustomFeature ? feature.geometry.coordinates : feature.geometry.coordinates;
+        const coordinates = isCustomFeature ? feature.geometry.coordinates : feature.center;
         const name = isCustomFeature ? feature.properties.Name : feature.place_name;
         const type = isCustomFeature ? 'Sevärdhet' : feature.place_type.join(', ');
         
@@ -1360,20 +1424,29 @@ function displaySearchResults(features) {
             </div>
         `;
 
-        resultItem.addEventListener('click', () => {
-            searchMarker.remove();
-            searchMarker.setLngLat(coordinates).addTo(map);
 
-            map.flyTo({
-                center: coordinates,
-                zoom: 15,
-                essential: true
-            });
+        resultItem.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent map click from triggering
 
             if (isCustomFeature) {
-                new mapboxgl.Popup({
+                // For GeoJSON features: Show info window only
+                searchMarker.remove(); // Remove any existing marker
+                
+                // Remove existing popup if any
+                if (currentPopup) {
+                    currentPopup.remove();
+                }
+
+                map.flyTo({
+                    center: coordinates,
+                    zoom: 15,
+                    essential: true
+                });
+
+                currentPopup = new mapboxgl.Popup({
                     closeButton: true,
-                    closeOnClick: false
+                    closeOnClick: false,
+                    className: 'custom-popup' // Add this class for styling
                 })
                 .setLngLat(coordinates)
                 .setHTML(`
@@ -1395,25 +1468,21 @@ function displaySearchResults(features) {
                     </div>
                 `)
                 .addTo(map);
+
+                // Add popup close event handler
+                currentPopup.on('close', () => {
+                    currentPopup = null;
+                });
             } else {
-                new mapboxgl.Popup({
-                    closeButton: true,
-                    closeOnClick: false
-                })
-                .setLngLat(coordinates)
-                .setHTML(`
-                    <div class="popup-title">${name}</div>
-                    <div class="popup-description">${type}</div>
-                    <div class="popup-actions">
-                        <button class="popup-action-btn" onclick="navigateToLocation([${coordinates}])">
-                            <i class="fas fa-directions"></i> Navigate
-                        </button>
-                        <button class="popup-action-btn" onclick="searchGoogle('${name}')">
-                            <i class="fas fa-search"></i> Info
-                        </button>
-                    </div>
-                `)
-                .addTo(map);
+                // For Mapbox results: Show marker only
+                searchMarker.remove();
+                searchMarker.setLngLat(coordinates).addTo(map);
+
+                map.flyTo({
+                    center: coordinates,
+                    zoom: 15,
+                    essential: true
+                });
             }
 
             searchResults.style.display = 'none';
@@ -1425,6 +1494,26 @@ function displaySearchResults(features) {
     searchResults.style.display = 'block';
 }
 
+
+
+// Lägg till denna kod direkt efter att Mapbox-scriptet har laddats
+const originalFetch = window.fetch;
+window.fetch = function(...args) {
+    if (args[0] && args[0].toString().includes('events.mapbox.com')) {
+        console.log('Mapbox event call attempted from:', new Error().stack);
+        return Promise.resolve(new Response()); // Returnera tomt svar istället för att göra anropet
+    }
+    return originalFetch.apply(this, args);
+};
+
+const originalXHR = window.XMLHttpRequest.prototype.open;
+window.XMLHttpRequest.prototype.open = function(...args) {
+    if (args[1] && args[1].toString().includes('events.mapbox.com')) {
+        console.log('Mapbox XHR event call attempted from:', new Error().stack);
+        return; // Blockera anropet
+    }
+    return originalXHR.apply(this, args);
+};
     // Window resize handler
     window.addEventListener('resize', () => {
         const sidebar = document.getElementById('sidebar');
