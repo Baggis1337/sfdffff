@@ -667,6 +667,8 @@ color: #ff4444 !important;
     let measurementActive = false;
     let points = [];
     let measureButton = null;
+	let searchDataCache = null; //Sökfunktion inladdning
+	let debounceTimer; //Sökfunktion inladdning
 
     map.on('load', () => {
         // Add Navigation Control
@@ -1278,22 +1280,40 @@ const searchMarker = new mapboxgl.Marker({
     scale: 0.8
 });
 
-// Search in local GeoJSON and Mapbox Geocoding API
-async function performSearch(query) {
+async function initializeSearchData() {
     try {
-        // Sök i lokal GeoJSON
-        const customFeatures = searchLocalFeatures(query);
-
-        // Sök i Mapbox Geocoding API
-        const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${mapboxgl.accessToken}&limit=10`;
-        const response = await fetch(geocodingUrl);
-        const data = await response.json();
-
-        // Kombinera och visa resultat, prioritera egna platser
-        displaySearchResults([...customFeatures, ...data.features]);
+        // Fetch your search data (GeoJSON features) here
+        const response = await fetch('your-geojson-url.json');
+        searchDataCache = await response.json();
     } catch (error) {
-        console.error('Search error:', error);
+        console.error('Error loading search data:', error);
     }
+}
+
+// Debounced search function to prevent excessive searches
+function debounceSearch(searchTerm) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => performSearch(searchTerm), 300);
+}
+
+
+// Search in local GeoJSON and Mapbox Geocoding API
+function performSearch(searchTerm) {
+    if (!searchTerm || searchTerm.length < 2) {
+        hideSearchResults();
+        return;
+    }
+
+    const searchResults = document.getElementById('search-results');
+    const searchTermLower = searchTerm.toLowerCase();
+    
+    // Filter cached data
+    const results = searchDataCache.features
+        .filter(feature => 
+            feature.properties.Name?.toLowerCase().includes(searchTermLower))
+        .slice(0, 10); // Limit results to 10 items
+
+    displaySearchResults(results);
 }
 
 // Sök i lokal GeoJSON
@@ -1321,14 +1341,102 @@ function searchLocalFeatures(query) {
     return features;
 }
 
-function displaySearchResults(features) {
+function displaySearchResults(results) {
+    const searchResults = document.getElementById('search-results');
     searchResults.innerHTML = '';
-    currentFeatures = features;
 
-    if (features.length === 0) {
+    if (results.length === 0) {
         searchResults.style.display = 'none';
         return;
     }
+
+    results.forEach(result => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'search-result-item';
+        resultItem.textContent = result.properties.Name;
+        
+        resultItem.addEventListener('click', () => {
+            handleSearchResultClick(result);
+        });
+
+        searchResults.appendChild(resultItem);
+    });
+
+    searchResults.style.display = 'block';
+}
+
+function handleSearchResultClick(result) {
+    const isGeoJSONFeature = result.geometry && result.properties;
+    
+    if (isGeoJSONFeature) {
+        // For GeoJSON features, just fly to location and show popup
+        const coordinates = result.geometry.coordinates;
+        map.flyTo({
+            center: coordinates,
+            zoom: 15
+        });
+
+        // Create popup for the feature
+        new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(`
+                <div class="popup-title">${result.properties.Name}</div>
+                <div class="popup-description">${result.properties.Description || ''}</div>
+            `)
+            .addTo(map);
+    } else {
+        // For non-GeoJSON results, add a marker
+        const marker = new mapboxgl.Marker()
+            .setLngLat([result.longitude, result.latitude])
+            .addTo(map);
+
+        map.flyTo({
+            center: [result.longitude, result.latitude],
+            zoom: 15
+        });
+    }
+
+    // Close and reset sidebar
+    resetSidebar();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeSearchData();
+
+    const searchInput = document.getElementById('search-input');
+    const searchClear = document.getElementById('search-clear');
+
+    searchInput.addEventListener('input', (e) => {
+        debounceSearch(e.target.value);
+        searchClear.style.display = e.target.value ? 'flex' : 'none';
+    });
+
+    searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClear.style.display = 'none';
+        hideSearchResults();
+    });
+});
+
+function hideSearchResults() {
+    const searchResults = document.getElementById('search-results');
+    searchResults.style.display = 'none';
+    searchResults.innerHTML = '';
+}
+
+
+// Reset sidebar state
+function resetSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    
+    sidebar.classList.remove('open');
+    searchInput.value = '';
+    searchResults.style.display = 'none';
+    document.getElementById('button-container').style.display = 'flex';
+    document.getElementById('tab-content').style.display = 'none';
+}
 
     features.forEach((feature) => {
         const resultItem = document.createElement('div');
